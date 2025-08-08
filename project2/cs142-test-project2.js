@@ -7,7 +7,7 @@
  */
 
 /* eslint-env browser, node */
-(function () {
+(() => {
   // Result message for Problems 1-3
   var p1Message = "SUCCESS";
   var p2Message = "SUCCESS";
@@ -34,7 +34,7 @@
   if (typeof cs142MakeMultiFilter !== "function") {
     console.error(
       "cs142MakeMultiFilter is not a function",
-      typeof cs142MakeMultiFilter
+      typeof cs142MakeMultiFilter,
     );
     p1Message = "FAILURE";
   } else {
@@ -47,7 +47,7 @@
     if (typeof filterFunc !== "function") {
       console.error(
         "cs142MakeMultiFilter does not return a function",
-        filterFunc
+        filterFunc,
       );
       p1Message = "FAILURE";
     } else {
@@ -55,7 +55,7 @@
       if (!arraysAreTheSame([1, 2, 3], result)) {
         console.error(
           "filter function with no args does not return the original array",
-          result
+          result,
         );
         p1Message = "FAILURE";
       }
@@ -70,18 +70,18 @@
           if (!arraysAreTheSame([1, 3], callbackResult)) {
             console.error(
               "filter function callback does not filter 2 correctly",
-              callbackResult
+              callbackResult,
             );
             p1Message = "FAILURE";
           }
           if (!arraysAreTheSame([1, 2, 3], this)) {
             console.error(
               "filter function callback does not pass original array as this",
-              this
+              this,
             );
             p1Message = "FAILURE";
           }
-        }
+        },
       );
 
       if (!callbackPerformed) {
@@ -106,7 +106,7 @@
       if (!arraysAreTheSame([1], result)) {
         console.error(
           "filter function callback does not filter 3 correctly",
-          result
+          result,
         );
         p1Message = "FAILURE";
       }
@@ -118,18 +118,18 @@
           if (!arraysAreTheSame([2, 3, 4], callbackResult)) {
             console.error(
               "second filter does not filter 1 (check for global variable usage)",
-              callbackResult
+              callbackResult,
             );
             p1Message = "FAILURE";
           }
           if (!arraysAreTheSame([1, 2, 3, 4], this)) {
             console.error(
               "filter function callback does not pass original array as this",
-              this
+              this,
             );
             p1Message = "FAILURE";
           }
-        }
+        },
       );
     }
   }
@@ -140,7 +140,7 @@
   if (typeof Cs142TemplateProcessor !== "function") {
     console.error(
       "Cs142TemplateProcessor is not a function",
-      typeof Cs142TemplateProcessor
+      typeof Cs142TemplateProcessor,
     );
     p2Message = "FAILURE";
   } else {
