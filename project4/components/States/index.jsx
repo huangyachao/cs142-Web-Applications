@@ -1,6 +1,5 @@
 import React from "react";
 import "./styles.css";
-import CoolHeaderPure from "../Header/index.jsx";
 
 /**
  * Define States, a React component of CS142 Project 4, Problem 2. The model
@@ -46,7 +45,6 @@ class States extends React.Component {
   render() {
     return (
       <div>
-        <CoolHeaderPure />
         <input
           className="cs142-states-input"
           type="text"
