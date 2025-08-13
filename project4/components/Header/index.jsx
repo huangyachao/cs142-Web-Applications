@@ -2,15 +2,16 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
 
-const CoolHeaderPure = () => {
+function CoolHeaderPure() {
   const [bgColors, setBgColors] = useState(["#ff7e5f", "#feb47b"]);
   const [hovered, setHovered] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     // 每次刷新随机生成渐变颜色
-    const randomColor = () =>
-      "#" + Math.floor(Math.random() * 16777215).toString(16);
+    const randomColor = () => {
+      return "#" + Math.floor(Math.random() * 16777215).toString(16);
+    };
     setBgColors([randomColor(), randomColor()]);
 
     // 监听滚动
@@ -40,6 +41,6 @@ const CoolHeaderPure = () => {
       </div>
     </header>
   );
-};
+}
 
 export default CoolHeaderPure;

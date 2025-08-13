@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
+import { HashRouter, Route, Link } from "react-router-dom";
+import React from "react";
 import Example from "./components/Example/index.jsx";
 import CoolHeaderPure from "./components/Header/index.jsx";
 import States from "./components/States/index.jsx";
-import ReactDOM from "react-dom";
-import { HashRouter, Route, Link } from "react-router-dom";
 
 function App() {
   const navBarStyle = {

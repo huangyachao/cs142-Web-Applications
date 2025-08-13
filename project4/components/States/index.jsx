@@ -28,9 +28,9 @@ class States extends React.Component {
     } else {
       const filteredResults = window.cs142models
         .statesModel()
-        .filter((item) =>
-          item.toLowerCase().includes(event.target.value.toLowerCase()),
-        );
+        .filter((item) => {
+          return item.toLowerCase().includes(event.target.value.toLowerCase());
+        });
       if (filteredResults.length === 0) {
         this.setState({ inputValue: event.target.value, result: undefined });
       } else {
@@ -51,7 +51,7 @@ class States extends React.Component {
           value={this.state.inputValue}
           placeholder="输入字符串"
           onInput={(event) => this.handleInput(event)}
-        ></input>
+        />
         <div className="cs142-states-display">{this.state.inputValue}</div>
         <div>
           {this.state.result === undefined ? (

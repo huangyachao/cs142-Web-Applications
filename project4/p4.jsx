@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
-import Example from "./components/Example/index.jsx";
-import CoolHeaderPure from "./components/Header/index.jsx";
-import States from "./components/States/index.jsx";
 import ReactDOM from "react-dom";
+import React, { useState } from "react";
+import Example from "./components/Example/index.jsx";
+import States from "./components/States/index.jsx";
 
 function App() {
   const [examplePage, setExamplePage] = useState(true);
 
-  const handleSwitch = (event) => {
+  const handleSwitch = () => {
     setExamplePage(!examplePage);
   };
 
