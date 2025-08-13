@@ -22,7 +22,8 @@ class Example extends React.Component {
     // initialize it here. We read the example model data into the state
     // variable 'name'.
     this.state = {
-      name: window.cs142models.exampleModel().name,
+      name: "huangyachao",
+      motto: "Be a trustworthy person",
       counter: 0,
       inputValue: "",
       buttonWasClicked: "",
@@ -35,6 +36,7 @@ class Example extends React.Component {
     // Note: A commmon idiom in React code is to use JavaScript bind() to smash
     // the method to accomplish this passthrough to the method:
     //      this.handleChange = this.handleChange.bind(this);
+    this.handleMottoChange = this.handleMottoChange.bind(this);
   }
 
   // React components have several "lifecycle functions"
@@ -62,6 +64,11 @@ class Example extends React.Component {
     // We need to tell the DOM to stop calling us otherwise React will complain
     // when we call setState on an unmounted component.
     clearInterval(this.timerID);
+  }
+
+  handleMottoChange(event) {
+    // console(event.target.value);
+    this.setState({ motto: event.target.value });
   }
 
   // Method called when the input box is typed into.
@@ -101,10 +108,12 @@ class Example extends React.Component {
     return (
       <div className="container Example">
         <h1>CS142 Project 4 React.js Example</h1>
-
-        <div className="motto-update">
-          {/* Your Problem 1 motto displaying and updating widget goes here */}
-        </div>
+        <div className="motto-update">{this.state.motto}</div>
+        <input
+          name="inputField"
+          placeholder={this.state.motto}
+          onChange={this.handleMottoChange}
+        />
 
         <p>
           This view is an example of a &nbsp;
@@ -152,9 +161,7 @@ class Example extends React.Component {
           into arguments to a function limiting what can be done as will be seen
           below.
         </p>
-
         <h3>Template substitution</h3>
-
         <p>
           JSX treats text inside of parentheses (e.g.{" "}
           <code>{"{JavaScriptExpression}"}</code>) as templates where the
@@ -164,7 +171,6 @@ class Example extends React.Component {
           expression. This feature allows component&apos;s specification to use
           templated HTML.
         </p>
-
         <p>
           The Example class constructor sets the object&apos;s property{" "}
           <code>state.name</code> (see the assignment to{" "}
@@ -181,9 +187,7 @@ class Example extends React.Component {
         <p className="cs142-example-output">
           My name is &ldquo; {this.state.name} &rdquo;.
         </p>
-
         <h3>One-way binding from JavaScript to HTML</h3>
-
         <p>
           React automatically propagates any changes to JavaScript state to the
           JSX templates. For example the following code{" "}
@@ -192,7 +196,6 @@ class Example extends React.Component {
           increments the counter every 2 seconds. The value of the counter can
           be seen changing here: {this.state.counter}.
         </p>
-
         <h3>Control flow</h3>
         <p>
           Most templating engines include support for doing conditional
@@ -296,7 +299,6 @@ class Example extends React.Component {
             ... and this one when some characters are typed into the below box.
           </p>
         </div>
-
         <h3>Input using DOM-like handlers</h3>
         <p>
           Input in React is done using DOM-like event handlers. For example, JSX
@@ -320,7 +322,6 @@ class Example extends React.Component {
           <code>onChange=</code> and
           <code>for=</code> becoming <code>htmlFor=</code>.
         </p>
-
         {/* eslint-disable jsx-a11y/label-has-associated-control */
         /* eslint-disable jsx-a11y/label-has-for */}
         <div className="cs142-example-output">

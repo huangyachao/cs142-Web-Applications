@@ -33,3 +33,14 @@
 .cs142-code-name {
   font-family: Courier New, monospace;
 }
+
+.motto-update {
+  font-size: 1.5rem; /* 大字号 */
+  font-weight: 700; /* 粗体 */
+  line-height: 1.3;
+  color: #2a4365; /* 深蓝色系，显专业 */
+  margin: 1.5rem 0;
+  padding: 1.2rem;
+  background: linear-gradient(to right, #f7fafc, #ebf8ff); /* 渐变背景 */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 柔和文字阴影 */
+}

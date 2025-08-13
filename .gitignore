@@ -17,6 +17,7 @@ pnpm-debug.log*
 # ------------------------
 dist/
 build/
+compiled/
 out/
 .tmp/
 .temp/
