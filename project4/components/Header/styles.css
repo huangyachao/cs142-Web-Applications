@@ -1,0 +1,54 @@
+/* CoolHeaderPure.css */
+.cool-header {
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.header-content {
+  text-align: center;
+}
+
+.logo {
+  font-size: 2.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  animation: float 3s ease-in-out infinite;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.logo.hovered {
+  color: #ffd700;
+  transform: scale(1.1);
+}
+
+.motto {
+  font-size: 1rem;
+  margin-top: 0.3rem;
+  font-style: italic;
+}
+
+nav {
+  margin-top: 0.5rem;
+}
+
+nav a {
+  margin: 0 1rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
