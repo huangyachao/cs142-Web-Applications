@@ -1,6 +1,6 @@
 import React from "react";
-import { Typography } from "@mui/material";
-
+import { Card, Typography, Grid, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 import "./styles.css";
 
 /**
@@ -12,14 +12,46 @@ class UserDetail extends React.Component {
   }
 
   render() {
+    const userId = this.props.match.params.userId;
+    const user = window.cs142models.userModel(userId);
     return (
-      <Typography variant="body1">
-        This should be the UserDetail view of the PhotoShare app. Since it is
-        invoked from React Router the params from the route will be in property
-        match. So this should show details of user:
-        {this.props.match.params.userId}. You can fetch the model for the user
-        from window.cs142models.userModel(userId).
-      </Typography>
+      <Card className="user-card">
+        {/* 用户名 */}
+        <Typography className="user-name">
+          {user.first_name} {user.last_name}
+        </Typography>
+
+        {/* 用户ID */}
+        <Typography className="user-id">ID: {user._id}</Typography>
+
+        {/* 位置和职业 */}
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6} className="user-grid-item">
+            <Typography className="user-field">
+              <strong>Location:</strong> {user.location}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6} className="user-grid-item">
+            <Typography className="user-field">
+              <strong>Occupation:</strong> {user.occupation}
+            </Typography>
+          </Grid>
+        </Grid>
+
+        {/* 描述 */}
+        <Typography className="user-description">
+          <strong>Description:</strong> {user.description}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to={`/photos/${user._id}`}
+          style={{ marginTop: "20px" }}
+        >
+          View Photos
+        </Button>
+      </Card>
     );
   }
 }
