@@ -12,16 +12,13 @@ class UserList extends React.Component {
     super(props);
     this.state = {
       userList: [], // 初始没有数据
-      error: null,
     };
   }
 
   componentDidMount() {
-    fetchModel("/user/list")
-      .then((data) => {
-        this.setState({ userList: data.data });
-      })
-      .catch((err) => this.setState({ error: err }));
+    fetchModel("/user/list").then((data) => {
+      this.setState({ userList: data.data });
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {

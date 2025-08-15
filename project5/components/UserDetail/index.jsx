@@ -12,7 +12,6 @@ class UserDetail extends React.Component {
     super(props);
     this.state = {
       user: {}, // 初始没有数据
-      error: null,
     };
     this._isMounted = false;
   }
@@ -22,13 +21,9 @@ class UserDetail extends React.Component {
 
   GetUserDetail() {
     const userId = this.props.match.params.userId;
-    fetchModel("/user/" + userId)
-      .then((data) => {
-        if (this._isMounted) this.setState({ user: data.data });
-      })
-      .catch((err) => {
-        this.setState({ error: err });
-      });
+    fetchModel("/user/" + userId).then((data) => {
+      if (this._isMounted) this.setState({ user: data.data });
+    });
   }
 
   componentDidMount() {

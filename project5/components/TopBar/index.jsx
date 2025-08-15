@@ -1,4 +1,4 @@
-import React, { version } from "react";
+import React from "react";
 import { AppBar, Toolbar, Typography, Box } from "@mui/material";
 import { withRouter } from "react-router-dom";
 import fetchModel from "../../lib/fetchModelData.js";
@@ -27,18 +27,20 @@ class TopBar extends React.Component {
       const userId = userIdMatch ? userIdMatch[1] : null;
       fetchModel("/user/" + userId).then((data) => {
         user = data.data;
-        if (user && this._isMounted)
+        if (user && this._isMounted) {
           this.setState({ rightText: `${user.first_name} ${user.last_name}` });
+        }
       });
     } else if (pathname.includes("/photos")) {
       const userIdMatch = hashPath.match(/\/photos\/([^/]+)/);
       const userId = userIdMatch ? userIdMatch[1] : null;
       fetchModel("/user/" + userId).then((data) => {
         user = data.data;
-        if (user && this._isMounted)
+        if (user && this._isMounted) {
           this.setState({
             rightText: `Photos of ${user.first_name} ${user.last_name}`,
           });
+        }
       });
     } else {
       this.setState({
@@ -50,7 +52,6 @@ class TopBar extends React.Component {
   getVersion() {
     fetchModel("/test/info").then((data) => {
       let info = data.data;
-      debugger;
       if (info && this._isMounted) this.setState({ version: info.__v });
     });
   }

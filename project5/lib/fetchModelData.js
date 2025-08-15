@@ -13,7 +13,7 @@
 async function fetchModel(url) {
   const response = await fetch(url);
   if (!response.ok) {
-    throw { status: response.status, statusText: response.statusText };
+    throw new Error("Fetch Model error!!");
   }
   const data = await response.json();
   return { data };

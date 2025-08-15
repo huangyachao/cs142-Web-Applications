@@ -74,7 +74,6 @@ class UserPhotos extends React.Component {
     super(props);
     this.state = {
       photos: [], // 初始没有数据
-      error: null,
     };
     this._isMounted = false;
   }
@@ -84,11 +83,9 @@ class UserPhotos extends React.Component {
 
   GetNewPotos() {
     const userId = this.props.match.params.userId;
-    fetchModel("/photosOfUser/" + userId)
-      .then((data) => {
-        if (this._isMounted) this.setState({ photos: data.data });
-      })
-      .catch((err) => this.setState({ error: err }));
+    fetchModel("/photosOfUser/" + userId).then((data) => {
+      if (this._isMounted) this.setState({ photos: data.data });
+    });
   }
 
   componentDidMount() {
