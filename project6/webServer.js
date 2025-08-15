@@ -145,8 +145,17 @@ app.get("/test/:p1", function (request, response) {
 app.get("/user/list", async function (request, response) {
   // const users = cs142models.userListModel();
   const users = await User.find(); // 查询 User 集合的所有文档
+  let newUsers = [];
+  for (const user of users) {
+    const newUser = {
+      _id: user._id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+    };
+    newUsers.push(newUser);
+  }
   // console.log(users);
-  response.status(200).send(users);
+  response.status(200).send(newUsers);
   console.log(users);
 });
 
@@ -155,15 +164,32 @@ app.get("/user/list", async function (request, response) {
  */
 app.get("/user/:id", async function (request, response) {
   const id = request.params.id;
-  const user = await User.findById(id);
-  // const user = cs142models.userModel(id);
-  console.log(user);
-  if (user === null) {
-    console.log("User with _id:" + id + " not found.");
-    response.status(400).send("Not found");
-    return;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return response.status(400).send("无效的用户 ID");
   }
-  response.status(200).send(user);
+
+  try {
+    const user = await User.findById(id);
+
+    if (user === null) {
+      console.log("User with _id:" + id + " not found.");
+      response.status(400).send("Not found");
+      return;
+    }
+    const newUser = {
+      _id: user._id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      location: user.location,
+      description: user.description,
+      occupation: user.occupation,
+    };
+    response.status(200).send(newUser);
+  } catch (err) {
+    // Mongoose 查询异常，比如 ID 格式不正确
+    console.error("查询用户时出错:", err.message);
+    response.status(500).send("服务器查询错误");
+  }
 });
 
 /**
@@ -171,7 +197,18 @@ app.get("/user/:id", async function (request, response) {
  */
 app.get("/photosOfUser/:id", async function (request, response) {
   const id = request.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return response.status(400).send("无效的用户 ID");
+  }
+
   let photos = await Photo.find({ user_id: id }).lean();
+
+  if (photos.length === 0) {
+    console.log("Photos for user with _id:" + id + " not found.");
+    response.status(400).send("Not found");
+    return;
+  }
 
   for (const photo of photos) {
     const newComments = []; // 用来存储修改后的 comment
@@ -194,14 +231,10 @@ app.get("/photosOfUser/:id", async function (request, response) {
     }
 
     // 用新数组替换原有 comments
+    delete photo.__v;
     photo.comments = newComments;
   }
   console.log(photos);
-  if (photos.length === 0) {
-    console.log("Photos for user with _id:" + id + " not found.");
-    response.status(400).send("Not found");
-    return;
-  }
 
   response.status(200).send(photos);
 });
