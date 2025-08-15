@@ -2,7 +2,6 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Box } from "@mui/material";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import fetchModel from "../../lib/fetchModelData.js";
 import "./styles.css";
 
 class TopBar extends React.Component {

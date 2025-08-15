@@ -46,7 +46,6 @@ const SchemaInfo = require("./schema/schemaInfo.js");
 
 // XXX - Your submission should work without this line. Comment out or delete
 // this line for tests and before submission!
-const cs142models = require("./modelData/photoApp.js").cs142models;
 mongoose.set("strictQuery", false);
 mongoose.connect("mongodb://127.0.0.1/cs142project6", {
   useNewUrlParser: true,
@@ -165,7 +164,7 @@ app.get("/user/list", async function (request, response) {
 app.get("/user/:id", async function (request, response) {
   const id = request.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return response.status(400).send("无效的用户 ID");
+    response.status(400).send("无效的用户 ID");
   }
 
   try {
@@ -199,7 +198,7 @@ app.get("/photosOfUser/:id", async function (request, response) {
   const id = request.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return response.status(400).send("无效的用户 ID");
+    response.status(400).send("无效的用户 ID");
   }
 
   let photos = await Photo.find({ user_id: id }).lean();

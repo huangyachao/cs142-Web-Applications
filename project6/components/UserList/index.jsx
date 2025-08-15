@@ -2,7 +2,6 @@ import React from "react";
 import { Divider, List, ListItemButton, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import fetchModel from "../../lib/fetchModelData.js";
 import "./styles.css";
 
 /**

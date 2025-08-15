@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import fetchModel from "../../lib/fetchModelData.js";
 import "./styles.css";
 /**
  * Define UserPhotos, a React component of CS142 Project 5.
@@ -97,8 +96,11 @@ class UserPhotos extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (JSON.stringify(prevState.photos) !== JSON.stringify(this.state.photos))
+    if (
+      JSON.stringify(prevState.photos) !== JSON.stringify(this.state.photos)
+    ) {
       this.GetNewPotos();
+    }
   }
 
   render() {

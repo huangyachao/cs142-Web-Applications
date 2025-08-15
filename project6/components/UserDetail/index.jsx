@@ -3,7 +3,6 @@ import { Card, Typography, Grid, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./styles.css";
-import fetchModel from "../../lib/fetchModelData.js";
 
 /**
  * Define UserDetail, a React component of CS142 Project 5.
@@ -33,8 +32,9 @@ class UserDetail extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (JSON.stringify(prevState.user) !== JSON.stringify(this.state.user))
+    if (JSON.stringify(prevState.user) !== JSON.stringify(this.state.user)) {
       this.GetUserDetail();
+    }
   }
 
   render() {
