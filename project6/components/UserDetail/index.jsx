@@ -32,7 +32,8 @@ class UserDetail extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.user !== this.state.user) this.GetUserDetail();
+    if (JSON.stringify(prevState.user) !== JSON.stringify(this.state.user))
+      this.GetUserDetail();
   }
 
   render() {

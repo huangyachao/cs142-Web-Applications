@@ -21,10 +21,6 @@ class UserList extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.userList !== this.state.userList) this.componentDidMount();
-  }
-
   render() {
     const userList = this.state.userList;
     return (

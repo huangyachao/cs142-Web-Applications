@@ -84,7 +84,9 @@ class UserPhotos extends React.Component {
   GetNewPotos() {
     const userId = this.props.match.params.userId;
     fetchModel("/photosOfUser/" + userId).then((data) => {
-      if (this._isMounted) this.setState({ photos: data.data });
+      if (this._isMounted) {
+        this.setState({ photos: data.data });
+      }
     });
   }
 
@@ -94,7 +96,8 @@ class UserPhotos extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.photos !== this.state.photos) this.GetNewPotos();
+    if (JSON.stringify(prevState.photos) !== JSON.stringify(this.state.photos))
+      this.GetNewPotos();
   }
 
   render() {

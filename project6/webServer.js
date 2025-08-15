@@ -65,7 +65,7 @@ app.get("/", function (request, response) {
  * Use express to handle argument passing in the URL. This .get will cause
  * express to accept URLs with /test/<something> and return the something in
  * request.params.p1.
- * 
+ *
  * If implement the get as follows:
  * /test        - Returns the SchemaInfo object of the database in JSON format.
  *                This is good for testing connectivity with MongoDB.
@@ -130,7 +130,7 @@ app.get("/test/:p1", function (request, response) {
           }
           response.end(JSON.stringify(obj));
         }
-      }
+      },
     );
   } else {
     // If we know understand the parameter we return a (Bad Parameter) (400)
@@ -142,16 +142,22 @@ app.get("/test/:p1", function (request, response) {
 /**
  * URL /user/list - Returns all the User objects.
  */
-app.get("/user/list", function (request, response) {
-  response.status(200).send(cs142models.userListModel());
+app.get("/user/list", async function (request, response) {
+  // const users = cs142models.userListModel();
+  const users = await User.find(); // 查询 User 集合的所有文档
+  // console.log(users);
+  response.status(200).send(users);
+  console.log(users);
 });
 
 /**
  * URL /user/:id - Returns the information for User (id).
  */
-app.get("/user/:id", function (request, response) {
+app.get("/user/:id", async function (request, response) {
   const id = request.params.id;
-  const user = cs142models.userModel(id);
+  const user = await User.findById(id);
+  // const user = cs142models.userModel(id);
+  console.log(user);
   if (user === null) {
     console.log("User with _id:" + id + " not found.");
     response.status(400).send("Not found");
@@ -163,14 +169,40 @@ app.get("/user/:id", function (request, response) {
 /**
  * URL /photosOfUser/:id - Returns the Photos for User (id).
  */
-app.get("/photosOfUser/:id", function (request, response) {
+app.get("/photosOfUser/:id", async function (request, response) {
   const id = request.params.id;
-  const photos = cs142models.photoOfUserModel(id);
+  let photos = await Photo.find({ user_id: id }).lean();
+
+  for (const photo of photos) {
+    const newComments = []; // 用来存储修改后的 comment
+
+    for (const comment of photo.comments) {
+      const user = await User.findById(comment.user_id).lean(); // 获取 user
+      // 构造你想要的新 comment 对象
+      const newUser = {
+        _id: user._id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      };
+      const newComment = {
+        _id: comment._id,
+        comment: comment.comment,
+        date_time: comment.date_time,
+        user: newUser, // 新增属性
+      };
+      newComments.push(newComment);
+    }
+
+    // 用新数组替换原有 comments
+    photo.comments = newComments;
+  }
+  console.log(photos);
   if (photos.length === 0) {
     console.log("Photos for user with _id:" + id + " not found.");
     response.status(400).send("Not found");
     return;
   }
+
   response.status(200).send(photos);
 });
 
@@ -180,6 +212,6 @@ const server = app.listen(3000, function () {
     "Listening at http://localhost:" +
       port +
       " exporting the directory " +
-      __dirname
+      __dirname,
   );
 });
