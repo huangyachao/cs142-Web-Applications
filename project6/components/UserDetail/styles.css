@@ -1,0 +1,43 @@
+.user-card {
+  max-width: 800px;
+  margin: 40px auto;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fefefe, #e0f7fa); /* 浅色渐变 */
+  color: #333; /* 深灰文字 */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.user-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.user-id {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.user-field {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.user-description {
+  font-style: italic;
+  color: #555;
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+.user-grid-item {
+  padding: 8px 0;
+}

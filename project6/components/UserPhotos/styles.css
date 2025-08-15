@@ -1,0 +1,12 @@
+.comment-user-button {
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  text-transform: none;
+  min-width: unset;
+  color: var(--mui-palette-primary-main, #1976d2); /* 主题色，带默认值 */
+}
+
+.comment-user-button:hover {
+  text-decoration: underline;
+  background-color: transparent; /* 去掉 hover 背景 */
+}
