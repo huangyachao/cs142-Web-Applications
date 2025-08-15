@@ -1,6 +1,7 @@
 import React from "react";
 import { Divider, List, ListItemButton, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import fetchModel from "../../lib/fetchModelData.js";
 import "./styles.css";
 
@@ -16,7 +17,7 @@ class UserList extends React.Component {
   }
 
   componentDidMount() {
-    fetchModel("/user/list").then((data) => {
+    axios("/user/list").then((data) => {
       this.setState({ userList: data.data });
     });
   }

@@ -11,6 +11,7 @@ import {
   Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import fetchModel from "../../lib/fetchModelData.js";
 import "./styles.css";
 /**
@@ -83,7 +84,7 @@ class UserPhotos extends React.Component {
 
   GetNewPotos() {
     const userId = this.props.match.params.userId;
-    fetchModel("/photosOfUser/" + userId).then((data) => {
+    axios("/photosOfUser/" + userId).then((data) => {
       if (this._isMounted) {
         this.setState({ photos: data.data });
       }

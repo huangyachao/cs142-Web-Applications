@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Typography, Grid, Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "./styles.css";
 import fetchModel from "../../lib/fetchModelData.js";
 
@@ -21,7 +22,7 @@ class UserDetail extends React.Component {
 
   GetUserDetail() {
     const userId = this.props.match.params.userId;
-    fetchModel("/user/" + userId).then((data) => {
+    axios("/user/" + userId).then((data) => {
       if (this._isMounted) this.setState({ user: data.data });
     });
   }

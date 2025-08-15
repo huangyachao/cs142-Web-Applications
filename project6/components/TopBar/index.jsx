@@ -1,6 +1,7 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Box } from "@mui/material";
 import { withRouter } from "react-router-dom";
+import axios from "axios";
 import fetchModel from "../../lib/fetchModelData.js";
 import "./styles.css";
 
@@ -25,7 +26,8 @@ class TopBar extends React.Component {
     if (pathname.startsWith("/users/") && !pathname.includes("/photos")) {
       const userIdMatch = hashPath.match(/\/users\/([^/]+)/);
       const userId = userIdMatch ? userIdMatch[1] : null;
-      fetchModel("/user/" + userId).then((data) => {
+
+      axios("/user/" + userId).then((data) => {
         user = data.data;
         if (user && this._isMounted) {
           this.setState({ rightText: `${user.first_name} ${user.last_name}` });
@@ -34,7 +36,7 @@ class TopBar extends React.Component {
     } else if (pathname.includes("/photos")) {
       const userIdMatch = hashPath.match(/\/photos\/([^/]+)/);
       const userId = userIdMatch ? userIdMatch[1] : null;
-      fetchModel("/user/" + userId).then((data) => {
+      axios("/user/" + userId).then((data) => {
         user = data.data;
         if (user && this._isMounted) {
           this.setState({
@@ -50,7 +52,7 @@ class TopBar extends React.Component {
   }
 
   getVersion() {
-    fetchModel("/test/info").then((data) => {
+    axios("/test/info").then((data) => {
       let info = data.data;
       if (info && this._isMounted) this.setState({ version: info.__v });
     });
