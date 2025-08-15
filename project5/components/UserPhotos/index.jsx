@@ -11,8 +11,8 @@ import {
   Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import fetchModel from "../../lib/fetchModelData.js";
 import "./styles.css";
-
 /**
  * Define UserPhotos, a React component of CS142 Project 5.
  */
@@ -72,11 +72,36 @@ function PhotoCard({ photo }) {
 class UserPhotos extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      photos: [], // 初始没有数据
+      error: null,
+    };
+    this._isMounted = false;
+  }
+  componentWillUnmount() {
+    this._isMounted = false; // 卸载前标记，防止 setState
+  }
+
+  GetNewPotos() {
+    const userId = this.props.match.params.userId;
+    fetchModel("/photosOfUser/" + userId)
+      .then((data) => {
+        if (this._isMounted) this.setState({ photos: data.data });
+      })
+      .catch((err) => this.setState({ error: err }));
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    this.GetNewPotos();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.photos !== this.state.photos) this.GetNewPotos();
   }
 
   render() {
-    const userId = this.props.match.params.userId;
-    const photos = window.cs142models.photoOfUserModel(userId) || [];
+    const photos = this.state.photos;
     return (
       <div>
         {photos.map((photo) => (

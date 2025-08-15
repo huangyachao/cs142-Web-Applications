@@ -1,6 +1,7 @@
 import React from "react";
 import { Divider, List, ListItemButton, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
+import fetchModel from "../../lib/fetchModelData.js";
 import "./styles.css";
 
 /**
@@ -9,11 +10,26 @@ import "./styles.css";
 class UserList extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      userList: [], // 初始没有数据
+      error: null,
+    };
+  }
+
+  componentDidMount() {
+    fetchModel("/user/list")
+      .then((data) => {
+        this.setState({ userList: data.data });
+      })
+      .catch((err) => this.setState({ error: err }));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.userList !== this.state.userList) this.componentDidMount();
   }
 
   render() {
-    const userList = window.cs142models.userListModel();
-    console.log(userList);
+    const userList = this.state.userList;
     return (
       <div>
         <List component="nav">

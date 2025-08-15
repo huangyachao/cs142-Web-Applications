@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Typography, Grid, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import "./styles.css";
+import fetchModel from "../../lib/fetchModelData.js";
 
 /**
  * Define UserDetail, a React component of CS142 Project 5.
@@ -9,11 +10,38 @@ import "./styles.css";
 class UserDetail extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      user: {}, // 初始没有数据
+      error: null,
+    };
+    this._isMounted = false;
+  }
+  componentWillUnmount() {
+    this._isMounted = false; // 卸载前标记，防止 setState
+  }
+
+  GetUserDetail() {
+    const userId = this.props.match.params.userId;
+    fetchModel("/user/" + userId)
+      .then((data) => {
+        if (this._isMounted) this.setState({ user: data.data });
+      })
+      .catch((err) => {
+        this.setState({ error: err });
+      });
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    this.GetUserDetail();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.user !== this.state.user) this.GetUserDetail();
   }
 
   render() {
-    const userId = this.props.match.params.userId;
-    const user = window.cs142models.userModel(userId);
+    const user = this.state.user;
     return (
       <Card className="user-card">
         {/* 用户名 */}

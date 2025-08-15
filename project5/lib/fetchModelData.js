@@ -10,16 +10,13 @@
  * {number} status          The HTTP response status
  * {string} statusText      The statusText from the xhr request
  */
-function fetchModel(url) {
-  return new Promise(function (resolve, reject) {
-    console.log(url);
-    setTimeout(() => reject(new Error(
-      { status: 501, statusText: "Not Implemented" })), 
-      0
-    );
-    // On Success return:
-    // resolve({data: getResponseObject});
-  });
+async function fetchModel(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw { status: response.status, statusText: response.statusText };
+  }
+  const data = await response.json();
+  return { data };
 }
 
 export default fetchModel;
