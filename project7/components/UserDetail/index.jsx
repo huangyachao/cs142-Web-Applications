@@ -32,7 +32,7 @@ class UserDetail extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (JSON.stringify(prevState.user) !== JSON.stringify(this.state.user)) {
+    if (prevProps.location !== this.props.location) {
       this.GetUserDetail();
     }
   }
