@@ -1,0 +1,15 @@
+.topbar-toolbar {
+  display: flex;
+  justify-content: space-between; /* 左右分开 */
+  align-items: center;
+  padding: 0 16px; /* 两边留点间距 */
+}
+
+.topbar-left {
+  color: #ffffff;
+}
+
+.topbar-right {
+  /* 可选样式，比如字体颜色 */
+  color: #ffffff;
+}
