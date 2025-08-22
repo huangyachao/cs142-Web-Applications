@@ -31,7 +31,7 @@ class UserDetail extends React.Component {
     this.GetUserDetail();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.location !== this.props.location) {
       this.GetUserDetail();
     }

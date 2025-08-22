@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Box } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 import "./styles.css";
@@ -8,10 +8,12 @@ class TopBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      leftText: "Please Login",
       rightText: "Welcome to PhotoShare App",
       version: null,
     };
     this._isMounted = false; // 标志位
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentWillUnmount() {
@@ -57,6 +59,21 @@ class TopBar extends React.Component {
     });
   }
 
+  async handleLogout() {
+    try {
+      const response = await axios.post("/admin/logout");
+
+      if (response.data.success) {
+        // 如果有全局登录状态，需要在这里设置 hasLoginIn = false
+        this.props.onChangeLoginState(false, "");
+      } else {
+        console.error("登出失败: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("登出请求异常:", error);
+    }
+  }
+
   componentDidMount() {
     this._isMounted = true;
     this.generateNewRightText();
@@ -64,7 +81,14 @@ class TopBar extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.location !== this.props.location) this.generateNewRightText();
+    if (this.props.hasLoginIn) {
+      if (prevProps.firstName !== this.props.firstName) {
+        this.setState({ leftText: `Hi, ${this.props.firstName}` });
+      }
+      if (prevProps.location !== this.props.location) {
+        this.generateNewRightText();
+      }
+    }
   }
 
   render() {
@@ -72,7 +96,16 @@ class TopBar extends React.Component {
       <AppBar className="cs142-topbar-appBar" position="absolute">
         <Toolbar className="topbar-toolbar">
           <Box className="topbar-left">
-            <Typography variant="h6">huangyachao</Typography>
+            <Typography variant="h6">{this.state.leftText}</Typography>
+            {this.props.hasLoginIn && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={this.handleLogout}
+              >
+                LogOut
+              </Button>
+            )}
           </Box>
           <Box className="topbar-middle">
             <Typography variant="h6">version:{this.state.version}</Typography>

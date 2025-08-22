@@ -21,6 +21,14 @@ class UserList extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.hasLoginIn !== this.props.hasLoginIn) {
+      axios("/user/list").then((data) => {
+        this.setState({ userList: data.data });
+      });
+    }
+  }
+
   render() {
     const userList = this.state.userList;
     return (

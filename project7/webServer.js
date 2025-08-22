@@ -39,6 +39,16 @@ const async = require("async");
 const express = require("express");
 const app = express();
 
+const session = require("express-session");
+app.use(
+  session({ secret: "secretKey", resave: false, saveUninitialized: false }),
+);
+
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+
+const multer = require("multer");
+
 // Load the Mongoose schema for User, Photo, and SchemaInfo
 const User = require("./schema/user.js");
 const Photo = require("./schema/photo.js");
@@ -142,6 +152,11 @@ app.get("/test/:p1", function (request, response) {
  * URL /user/list - Returns all the User objects.
  */
 app.get("/user/list", async function (request, response) {
+  if (!request.session.user) {
+    console.log("访问/user/list失败,用户未登录 ");
+    response.status(401).send("用户未登录");
+    return;
+  }
   // const users = cs142models.userListModel();
   const users = await User.find(); // 查询 User 集合的所有文档
   let newUsers = [];
@@ -153,18 +168,26 @@ app.get("/user/list", async function (request, response) {
     };
     newUsers.push(newUser);
   }
+  console.log("获取/user/list成功");
   // console.log(users);
   response.status(200).send(newUsers);
-  console.log(users);
+  // console.log(users);
 });
 
 /**
  * URL /user/:id - Returns the information for User (id).
  */
 app.get("/user/:id", async function (request, response) {
+  if (!request.session.user) {
+    console.log("访问/user/:id失败,用户未登录 ");
+    response.status(401).send("用户未登录");
+    return;
+  }
+
   const id = request.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     response.status(400).send("无效的用户 ID");
+    return;
   }
 
   try {
@@ -184,6 +207,7 @@ app.get("/user/:id", async function (request, response) {
       occupation: user.occupation,
     };
     response.status(200).send(newUser);
+    console.log("获取" + user.first_name + "信息成功");
   } catch (err) {
     // Mongoose 查询异常，比如 ID 格式不正确
     console.error("查询用户时出错:", err.message);
@@ -195,10 +219,16 @@ app.get("/user/:id", async function (request, response) {
  * URL /photosOfUser/:id - Returns the Photos for User (id).
  */
 app.get("/photosOfUser/:id", async function (request, response) {
+  if (!request.session.user) {
+    console.log("访问/photosOfUser/:id失败,用户未登录 ");
+    response.status(401).send("用户未登录");
+    return;
+  }
   const id = request.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     response.status(400).send("无效的用户 ID");
+    return;
   }
 
   let photos = await Photo.find({ user_id: id }).lean();
@@ -233,9 +263,58 @@ app.get("/photosOfUser/:id", async function (request, response) {
     delete photo.__v;
     photo.comments = newComments;
   }
-  console.log(photos);
+  console.log("获取photo" + id + "信息成功");
 
   response.status(200).send(photos);
+});
+
+/**
+ * URL /admin/login.
+ */
+app.post("/admin/login", async function (request, response) {
+  // const users = cs142models.userListModel();
+  const login_name = request.body.login_name;
+  const user = await User.findOne({ login_name: login_name }); // 查询 User 集合的所有文档
+  if (!user) {
+    console.log(login_name + "未找到，登录失败");
+    response.status(400).send("Login name not found");
+    return;
+  }
+  request.session.user = { login_name };
+  console.log({ login_name } + "login in");
+  const newUser = {
+    _id: user._id,
+    first_name: user.first_name,
+    last_name: user.last_name,
+  };
+  // console.log(users);
+  response.status(200).send(newUser);
+  console.log(login_name + "登录成功");
+});
+
+/**
+ * URL /admin/logout.
+ */
+app.post("/admin/logout", async (req, res) => {
+  try {
+    if (!req.session) {
+      // 没有 session 直接返回成功
+      return res.status(200).json({ message: "未登录或已登出", success: true });
+    }
+
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("登出失败:", err);
+        return res.status(500).json({ message: "登出失败", success: false });
+      }
+      console.log("登出成功");
+      // 返回给前端成功信息
+      res.status(200).json({ message: "已登出", success: true });
+    });
+  } catch (error) {
+    console.error("登出接口异常:", error);
+    res.status(500).json({ message: "服务器异常，登出失败", success: false });
+  }
 });
 
 const server = app.listen(3000, function () {
