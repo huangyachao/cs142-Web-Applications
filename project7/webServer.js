@@ -152,7 +152,7 @@ app.get("/test/:p1", function (request, response) {
  * URL /user/list - Returns all the User objects.
  */
 app.get("/user/list", async function (request, response) {
-  if (!request.session.user) {
+  if (!request.session.userId) {
     console.log("访问/user/list失败,用户未登录 ");
     response.status(401).send("用户未登录");
     return;
@@ -178,7 +178,7 @@ app.get("/user/list", async function (request, response) {
  * URL /user/:id - Returns the information for User (id).
  */
 app.get("/user/:id", async function (request, response) {
-  if (!request.session.user) {
+  if (!request.session.userId) {
     console.log("访问/user/:id失败,用户未登录 ");
     response.status(401).send("用户未登录");
     return;
@@ -219,7 +219,7 @@ app.get("/user/:id", async function (request, response) {
  * URL /photosOfUser/:id - Returns the Photos for User (id).
  */
 app.get("/photosOfUser/:id", async function (request, response) {
-  if (!request.session.user) {
+  if (!request.session.userId) {
     console.log("访问/photosOfUser/:id失败,用户未登录 ");
     response.status(401).send("用户未登录");
     return;
@@ -280,8 +280,8 @@ app.post("/admin/login", async function (request, response) {
     response.status(400).send("Login name not found");
     return;
   }
-  request.session.user = { login_name };
-  console.log({ login_name } + "login in");
+  const id = user._id;
+  request.session.userId = id;
   const newUser = {
     _id: user._id,
     first_name: user.first_name,
@@ -315,6 +315,52 @@ app.post("/admin/logout", async (req, res) => {
     console.error("登出接口异常:", error);
     res.status(500).json({ message: "服务器异常，登出失败", success: false });
   }
+});
+
+/**
+ * URL /commentsOfPhoto/:photo_id
+ */
+app.post("/commentsOfPhoto/:photo_id", async (request, response) => {
+  if (!request.session.userId) {
+    console.log("访问/photosOfUser/:id失败,用户未登录 ");
+    response.status(401).send("用户未登录");
+    return;
+  }
+
+  console.log("访问/photosOfUser/" + request.session.userId);
+
+  if (request.body.comment === "") {
+    console.error("Comment为空:");
+    response.status(400).send("Comment为空");
+    return;
+  }
+  const photo_id = request.params.photo_id;
+
+  if (!mongoose.Types.ObjectId.isValid(photo_id)) {
+    console.error("无效的photo ID " + photo_id);
+    response.status(400).send("无效的photo ID");
+    return;
+  }
+
+  const photo = await Photo.findById(photo_id);
+
+  if (photo === null) {
+    console.log("Photo with _id:" + photo_id + " not found.");
+    response.status(400).send("Not found");
+    return;
+  }
+  const comment = {
+    comment: request.body.comment,
+    user_id: request.session.userId,
+    // date_time 会自动生成
+  };
+
+  photo.comments.push(comment); // 插入子文档
+  await photo.save(); // 保存到数据库
+
+  console.log("插入comment" + comment + "成功");
+
+  response.status(200).send(photo);
 });
 
 const server = app.listen(3000, function () {
