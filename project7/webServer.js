@@ -349,18 +349,43 @@ app.post("/commentsOfPhoto/:photo_id", async (request, response) => {
     response.status(400).send("Not found");
     return;
   }
-  const comment = {
+  const new_comment = {
     comment: request.body.comment,
     user_id: request.session.userId,
     // date_time 会自动生成
   };
 
-  photo.comments.push(comment); // 插入子文档
+  photo.comments.push(new_comment); // 插入子文档
   await photo.save(); // 保存到数据库
 
-  console.log("插入comment" + comment + "成功");
+  const newComments = []; // 用来存储修改后的 comment
+  const newPhoto = photo.toObject();
 
-  response.status(200).send(photo);
+  for (const comment of newPhoto.comments) {
+    console.log(comment);
+    const user = await User.findById(comment.user_id).lean(); // 获取 user
+    // 构造你想要的新 comment 对象
+    const newUser = {
+      _id: user._id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+    };
+    const newComment = {
+      _id: comment._id,
+      comment: comment.comment,
+      date_time: comment.date_time,
+      user: newUser, // 新增属性
+    };
+
+    newComments.push(newComment);
+  }
+
+  // 用新数组替换原有 comments
+  delete newPhoto.__v;
+  console.log(newComments);
+  newPhoto.comments = newComments;
+  console.log("插入comment成功，更新后的photo:" + newPhoto);
+  response.status(200).send(newPhoto);
 });
 
 const server = app.listen(3000, function () {

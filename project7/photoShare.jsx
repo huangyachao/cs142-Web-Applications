@@ -119,6 +119,7 @@ class PhotoShare extends React.Component {
                       );
                     }}
                   />
+                  <Redirect to="/login-register" />
                 </Switch>
               </Paper>
             </Grid>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardMedia,
@@ -9,6 +9,7 @@ import {
   ListItemText,
   Box,
   Button,
+  TextField,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -41,8 +42,29 @@ function CommentCard({ comment }) {
   );
 }
 
-function PhotoCard({ photo }) {
-  const comments = photo.comments || [];
+function PhotoCard({ initialPhoto }) {
+  const [photo, setPhoto] = useState(initialPhoto);
+  const [newComment, setNewComment] = useState("");
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) {
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/commentsOfPhoto/${photo._id}`, {
+        comment: newComment,
+      });
+
+      if (response.status === 200) {
+        setNewComment(""); // 清空输入框
+        setPhoto(response.data);
+      }
+    } catch (err) {
+      console.error("添加评论失败:", err);
+    }
+  };
+
   return (
     <Card style={{ marginBottom: "24px", maxWidth: "600px", margin: "auto" }}>
       <CardMedia
@@ -60,10 +82,31 @@ function PhotoCard({ photo }) {
           Comments:
         </Typography>
         <List>
-          {comments.map((comment) => (
+          {photo.comments.map((comment) => (
             <CommentCard key={comment._id} comment={comment} />
           ))}
         </List>
+
+        {/* 评论输入框 */}
+        <TextField
+          fullWidth
+          variant="outlined"
+          size="small"
+          label="添加评论"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          style={{ marginTop: "12px" }}
+        />
+
+        {/* 提交按钮 */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddComment}
+          style={{ marginTop: "8px" }}
+        >
+          Add new comment
+        </Button>
       </CardContent>
     </Card>
   );
@@ -108,7 +151,7 @@ class UserPhotos extends React.Component {
     return (
       <div>
         {photos.map((photo) => (
-          <PhotoCard key={photo._id} photo={photo} />
+          <PhotoCard key={photo._id} initialPhoto={photo} />
         ))}
       </div>
     );
